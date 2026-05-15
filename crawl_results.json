@@ -1,0 +1,137 @@
+[
+  {
+    "url": "http://localhost:8080/vulnerabilities/sqli/",
+    "status_code": 200,
+    "forms": [
+      {
+        "action": "#",
+        "method": "get",
+        "inputs": [
+          {
+            "name": "id",
+            "type": "text",
+            "value": ""
+          },
+          {
+            "name": "Submit",
+            "type": "submit",
+            "value": "Submit"
+          }
+        ]
+      }
+    ],
+    "links": [
+      "http://localhost:8080/about.php",
+      "http://localhost:8080/vulnerabilities/brute/",
+      "http://localhost:8080/vulnerabilities/fi/?page=include.php",
+      "http://localhost:8080/security.php",
+      "http://localhost:8080/vulnerabilities/csp/",
+      "http://localhost:8080/phpinfo.php",
+      "http://localhost:8080/logout.php",
+      "http://localhost:8080/vulnerabilities/sqli/",
+      "http://localhost:8080/vulnerabilities/javascript/",
+      "http://localhost:8080/vulnerabilities/sqli_blind/",
+      "http://localhost:8080/vulnerabilities/captcha/",
+      "http://localhost:8080/vulnerabilities/exec/",
+      "http://localhost:8080/vulnerabilities/weak_id/",
+      "http://localhost:8080/vulnerabilities/csrf/",
+      "http://localhost:8080/vulnerabilities/upload/",
+      "http://localhost:8080/",
+      "http://localhost:8080/vulnerabilities/xss_d/",
+      "http://localhost:8080/instructions.php",
+      "http://localhost:8080/setup.php",
+      "http://localhost:8080/vulnerabilities/xss_r/",
+      "http://localhost:8080/vulnerabilities/xss_s/"
+    ]
+  },
+  {
+    "url": "http://localhost:8080/vulnerabilities/xss_r/",
+    "status_code": 200,
+    "forms": [
+      {
+        "action": "#",
+        "method": "get",
+        "inputs": [
+          {
+            "name": "name",
+            "type": "text",
+            "value": ""
+          },
+          {
+            "name": "",
+            "type": "submit",
+            "value": "Submit"
+          }
+        ]
+      }
+    ],
+    "links": [
+      "http://localhost:8080/about.php",
+      "http://localhost:8080/vulnerabilities/brute/",
+      "http://localhost:8080/vulnerabilities/fi/?page=include.php",
+      "http://localhost:8080/security.php",
+      "http://localhost:8080/vulnerabilities/csp/",
+      "http://localhost:8080/phpinfo.php",
+      "http://localhost:8080/logout.php",
+      "http://localhost:8080/vulnerabilities/sqli/",
+      "http://localhost:8080/vulnerabilities/javascript/",
+      "http://localhost:8080/vulnerabilities/sqli_blind/",
+      "http://localhost:8080/vulnerabilities/captcha/",
+      "http://localhost:8080/vulnerabilities/exec/",
+      "http://localhost:8080/vulnerabilities/weak_id/",
+      "http://localhost:8080/vulnerabilities/csrf/",
+      "http://localhost:8080/vulnerabilities/upload/",
+      "http://localhost:8080/",
+      "http://localhost:8080/vulnerabilities/xss_d/",
+      "http://localhost:8080/instructions.php",
+      "http://localhost:8080/setup.php",
+      "http://localhost:8080/vulnerabilities/xss_r/",
+      "http://localhost:8080/vulnerabilities/xss_s/"
+    ]
+  },
+  {
+    "url": "http://localhost:8080/vulnerabilities/exec/",
+    "status_code": 200,
+    "forms": [
+      {
+        "action": "#",
+        "method": "post",
+        "inputs": [
+          {
+            "name": "ip",
+            "type": "text",
+            "value": ""
+          },
+          {
+            "name": "Submit",
+            "type": "submit",
+            "value": "Submit"
+          }
+        ]
+      }
+    ],
+    "links": [
+      "http://localhost:8080/about.php",
+      "http://localhost:8080/vulnerabilities/brute/",
+      "http://localhost:8080/vulnerabilities/fi/?page=include.php",
+      "http://localhost:8080/security.php",
+      "http://localhost:8080/vulnerabilities/csp/",
+      "http://localhost:8080/phpinfo.php",
+      "http://localhost:8080/logout.php",
+      "http://localhost:8080/vulnerabilities/sqli/",
+      "http://localhost:8080/vulnerabilities/javascript/",
+      "http://localhost:8080/vulnerabilities/sqli_blind/",
+      "http://localhost:8080/vulnerabilities/captcha/",
+      "http://localhost:8080/vulnerabilities/exec/",
+      "http://localhost:8080/vulnerabilities/weak_id/",
+      "http://localhost:8080/vulnerabilities/csrf/",
+      "http://localhost:8080/vulnerabilities/upload/",
+      "http://localhost:8080/",
+      "http://localhost:8080/vulnerabilities/xss_d/",
+      "http://localhost:8080/instructions.php",
+      "http://localhost:8080/setup.php",
+      "http://localhost:8080/vulnerabilities/xss_r/",
+      "http://localhost:8080/vulnerabilities/xss_s/"
+    ]
+  }
+]

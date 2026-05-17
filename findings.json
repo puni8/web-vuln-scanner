@@ -1,0 +1,12 @@
+[
+  {
+    "vulnerability": "SQL Injection (Error-based)",
+    "url": "http://localhost:8080/vulnerabilities/sqli/",
+    "parameter": "id",
+    "method": "GET",
+    "payload": "'",
+    "evidence": "you have an error in your sql syntax",
+    "severity": "High",
+    "cvss_score": 8.6
+  }
+]

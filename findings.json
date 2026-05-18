@@ -8,5 +8,15 @@
     "evidence": "you have an error in your sql syntax",
     "severity": "High",
     "cvss_score": 8.6
+  },
+  {
+    "vulnerability": "Reflected Cross-Site Scripting (XSS)",
+    "url": "http://localhost:8080/vulnerabilities/xss_r/",
+    "parameter": "name",
+    "method": "GET",
+    "payload": "<script>alert(1)</script>",
+    "evidence": "Payload reflected unencoded in response body",
+    "severity": "High",
+    "cvss_score": 7.4
   }
 ]

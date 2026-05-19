@@ -18,5 +18,15 @@
     "evidence": "Payload reflected unencoded in response body",
     "severity": "High",
     "cvss_score": 7.4
+  },
+  {
+    "vulnerability": "Insecure Direct Object Reference (IDOR)",
+    "url": "http://localhost:8080/vulnerabilities/sqli/",
+    "parameter": "id",
+    "method": "GET",
+    "payload": "Enumerated id=1..6",
+    "evidence": "6 unique response contents returned for sequential IDs - possible unauthorized data access across different objects",
+    "severity": "High",
+    "cvss_score": 7.7
   }
 ]

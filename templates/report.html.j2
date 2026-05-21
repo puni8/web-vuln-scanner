@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ report_title }} - Penetration Test Report</title>
+<style>
+  /* === Base Styles === */
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #2c3e50;
+    line-height: 1.6;
+    background: #f8f9fa;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 50px 60px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  }
+
+  /* === Cover Page === */
+  .cover {
+    text-align: center;
+    padding: 80px 0 60px;
+    border-bottom: 3px solid #2c3e50;
+    margin-bottom: 50px;
+  }
+  .cover h1 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin: 0 0 10px;
+    letter-spacing: -1px;
+  }
+  .cover .subtitle {
+    font-size: 18px;
+    color: #7f8c8d;
+    margin-bottom: 40px;
+  }
+  .cover .meta {
+    display: inline-block;
+    text-align: left;
+    background: #ecf0f1;
+    padding: 20px 30px;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  .cover .meta div { margin: 4px 0; }
+  .cover .meta strong { color: #2c3e50; display: inline-block; min-width: 120px; }
+
+  /* === Section Headers === */
+  h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+    margin-top: 40px;
+    font-size: 22px;
+  }
+  h3 {
+    color: #34495e;
+    font-size: 18px;
+    margin-top: 30px;
+  }
+
+  /* === Summary Table === */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .summary-card {
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    color: white;
+  }
+  .summary-card .count { font-size: 32px; font-weight: bold; }
+  .summary-card .label { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+  .critical { background: #c0392b; }
+  .high { background: #e74c3c; }
+  .medium { background: #f39c12; }
+  .low { background: #27ae60; }
+
+  /* === Findings === */
+  .finding {
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid #e74c3c;
+    border-radius: 6px;
+    padding: 25px 30px;
+    margin: 25px 0;
+    background: #fafafa;
+  }
+  .finding.critical-finding { border-left-color: #c0392b; }
+  .finding.high-finding { border-left-color: #e74c3c; }
+  .finding.medium-finding { border-left-color: #f39c12; }
+  .finding.low-finding { border-left-color: #27ae60; }
+
+  .finding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .finding-title { font-size: 18px; font-weight: 600; color: #2c3e50; margin: 0; }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-critical { background: #c0392b; }
+  .badge-high { background: #e74c3c; }
+  .badge-medium { background: #f39c12; }
+  .badge-low { background: #27ae60; }
+  .cvss { background: #34495e; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+
+  .finding-meta {
+    background: white;
+    padding: 12px 18px;
+    border-radius: 4px;
+    margin: 12px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+  .finding-meta strong { color: #2c3e50; display: inline-block; min-width: 90px; }
+
+  code, pre {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+  pre { padding: 12px 16px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+
+  .section-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* === Footer === */
+  .footer {
+    margin-top: 60px;
+    padding-top: 25px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    color: #95a5a6;
+    font-size: 13px;
+  }
+
+  /* === Print Styles === */
+  @media print {
+    body { background: white; }
+    .container { box-shadow: none; padding: 20px; }
+    .finding { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- === COVER PAGE === -->
+  <div class="cover">
+    <h1>{{ report_title }}</h1>
+    <div class="subtitle">Web Application Penetration Test Report</div>
+    <div class="meta">
+      <div><strong>Target:</strong> {{ target }}</div>
+      <div><strong>Test Date:</strong> {{ test_date }}</div>
+      <div><strong>Tester:</strong> {{ tester_name }}</div>
+      <div><strong>Report Type:</strong> Automated Vulnerability Assessment</div>
+      <div><strong>Total Findings:</strong> {{ total_findings }}</div>
+    </div>
+  </div>
+
+  <!-- === EXECUTIVE SUMMARY === -->
+  <h2>Executive Summary</h2>
+  <p>
+    This report presents the findings of an automated security assessment conducted against
+    <strong>{{ target }}</strong> on {{ test_date }}. The assessment was performed using a custom-built
+    Python vulnerability scanner that systematically identifies common web application security weaknesses.
+  </p>
+  <p>
+    A total of <strong>{{ total_findings }} vulnerabilities</strong> were identified across
+    {{ vuln_class_count }} distinct vulnerability classes. All findings are categorized as
+    <strong>High severity</strong> and represent significant risks that should be remediated promptly.
+  </p>
+  <p>
+    The identified vulnerabilities could allow an attacker to compromise user data, hijack user sessions,
+    or gain unauthorized access to sensitive information. Detailed technical findings, proof-of-concept
+    payloads, and remediation guidance are provided in subsequent sections.
+  </p>
+
+  <!-- === FINDINGS SUMMARY GRID === -->
+  <h2>Findings Summary</h2>
+  <div class="summary-grid">
+    <div class="summary-card critical">
+      <div class="count">{{ severity_counts.critical }}</div>
+      <div class="label">Critical</div>
+    </div>
+    <div class="summary-card high">
+      <div class="count">{{ severity_counts.high }}</div>
+      <div class="label">High</div>
+    </div>
+    <div class="summary-card medium">
+      <div class="count">{{ severity_counts.medium }}</div>
+      <div class="label">Medium</div>
+    </div>
+    <div class="summary-card low">
+      <div class="count">{{ severity_counts.low }}</div>
+      <div class="label">Low</div>
+    </div>
+  </div>
+
+  <!-- === METHODOLOGY === -->
+  <h2>Methodology</h2>
+  <p>The assessment followed a structured 3-phase methodology:</p>
+  <ol>
+    <li><strong>Reconnaissance &amp; Mapping:</strong> An authenticated crawler enumerated all forms, input fields, and links across protected pages, producing a structured map of the application's attack surface.</li>
+    <li><strong>Vulnerability Detection:</strong> Three independent detection modules tested each input for distinct vulnerability classes:
+      <ul>
+        <li><em>SQL Injection</em> — error-based payload injection across 8 payloads, response pattern matching against 15+ database error signatures</li>
+        <li><em>Cross-Site Scripting</em> — reflective payload injection across 8 XSS variants, detection via unencoded payload reflection in responses</li>
+        <li><em>Insecure Direct Object Reference</em> — sequential ID enumeration with MD5 content-hash comparison to detect unauthorized data access</li>
+      </ul>
+    </li>
+    <li><strong>Reporting:</strong> Findings are aggregated and presented with proof-of-concept payloads, evidence, CVSS 3.1 base scores, and remediation guidance.</li>
+  </ol>
+
+  <!-- === TECHNICAL FINDINGS === -->
+  <h2>Technical Findings</h2>
+
+  {% for finding in findings %}
+  <div class="finding {{ finding.severity | lower }}-finding">
+    <div class="finding-header">
+      <h3 class="finding-title">{{ loop.index }}. {{ finding.vulnerability }}</h3>
+      <div>
+        <span class="badge badge-{{ finding.severity | lower }}">{{ finding.severity }}</span>
+        <span class="cvss">CVSS {{ finding.cvss_score }}</span>
+      </div>
+    </div>
+
+    <div class="finding-meta">
+      <div><strong>URL:</strong> {{ finding.url }}</div>
+      <div><strong>Parameter:</strong> {{ finding.parameter }}</div>
+      <div><strong>Method:</strong> {{ finding.method }}</div>
+    </div>
+
+    <div class="section-label">Proof of Concept</div>
+    <pre>{{ finding.payload }}</pre>
+
+    <div class="section-label">Evidence</div>
+    <p>{{ finding.evidence }}</p>
+
+    <div class="section-label">Impact</div>
+    <p>{{ finding.impact }}</p>
+
+    <div class="section-label">Remediation</div>
+    <p>{{ finding.remediation }}</p>
+
+    <div class="section-label">References</div>
+    <ul>
+      {% for ref in finding.references %}
+      <li><a href="{{ ref.url }}" target="_blank">{{ ref.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+
+  <!-- === CONCLUSION === -->
+  <h2>Conclusion</h2>
+  <p>
+    The application contains {{ total_findings }} high-severity vulnerabilities that present significant
+    security risk. Remediation should be prioritized based on the CVSS scoring and exploitability of each
+    finding. All identified issues map to entries in the OWASP Top 10 (2021), which represents the most
+    critical security risks to modern web applications.
+  </p>
+  <p>
+    Following remediation, a retest is recommended to verify all vulnerabilities have been successfully
+    addressed. Additionally, the development team should consider implementing the secure coding practices
+    outlined in the OWASP Application Security Verification Standard (ASVS).
+  </p>
+
+  <!-- === FOOTER === -->
+  <div class="footer">
+    <p>Generated by Web Vulnerability Scanner v1.0 &mdash; {{ test_date }}</p>
+    <p>Report prepared by {{ tester_name }} &middot; <a href="https://github.com/{{ github_user }}/web-vuln-scanner">github.com/{{ github_user }}/web-vuln-scanner</a></p>
+  </div>
+
+</div>
+</body>
+</html>

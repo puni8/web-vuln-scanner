@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DVWA Security Assessment - Penetration Test Report</title>
+<style>
+  /* === Base Styles === */
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #2c3e50;
+    line-height: 1.6;
+    background: #f8f9fa;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 50px 60px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  }
+
+  /* === Cover Page === */
+  .cover {
+    text-align: center;
+    padding: 80px 0 60px;
+    border-bottom: 3px solid #2c3e50;
+    margin-bottom: 50px;
+  }
+  .cover h1 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin: 0 0 10px;
+    letter-spacing: -1px;
+  }
+  .cover .subtitle {
+    font-size: 18px;
+    color: #7f8c8d;
+    margin-bottom: 40px;
+  }
+  .cover .meta {
+    display: inline-block;
+    text-align: left;
+    background: #ecf0f1;
+    padding: 20px 30px;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  .cover .meta div { margin: 4px 0; }
+  .cover .meta strong { color: #2c3e50; display: inline-block; min-width: 120px; }
+
+  /* === Section Headers === */
+  h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+    margin-top: 40px;
+    font-size: 22px;
+  }
+  h3 {
+    color: #34495e;
+    font-size: 18px;
+    margin-top: 30px;
+  }
+
+  /* === Summary Table === */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .summary-card {
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    color: white;
+  }
+  .summary-card .count { font-size: 32px; font-weight: bold; }
+  .summary-card .label { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+  .critical { background: #c0392b; }
+  .high { background: #e74c3c; }
+  .medium { background: #f39c12; }
+  .low { background: #27ae60; }
+
+  /* === Findings === */
+  .finding {
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid #e74c3c;
+    border-radius: 6px;
+    padding: 25px 30px;
+    margin: 25px 0;
+    background: #fafafa;
+  }
+  .finding.critical-finding { border-left-color: #c0392b; }
+  .finding.high-finding { border-left-color: #e74c3c; }
+  .finding.medium-finding { border-left-color: #f39c12; }
+  .finding.low-finding { border-left-color: #27ae60; }
+
+  .finding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .finding-title { font-size: 18px; font-weight: 600; color: #2c3e50; margin: 0; }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-critical { background: #c0392b; }
+  .badge-high { background: #e74c3c; }
+  .badge-medium { background: #f39c12; }
+  .badge-low { background: #27ae60; }
+  .cvss { background: #34495e; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+
+  .finding-meta {
+    background: white;
+    padding: 12px 18px;
+    border-radius: 4px;
+    margin: 12px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+  .finding-meta strong { color: #2c3e50; display: inline-block; min-width: 90px; }
+
+  code, pre {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+  pre { padding: 12px 16px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+
+  .section-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* === Footer === */
+  .footer {
+    margin-top: 60px;
+    padding-top: 25px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    color: #95a5a6;
+    font-size: 13px;
+  }
+
+  /* === Print Styles === */
+  @media print {
+    body { background: white; }
+    .container { box-shadow: none; padding: 20px; }
+    .finding { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- === COVER PAGE === -->
+  <div class="cover">
+    <h1>DVWA Security Assessment</h1>
+    <div class="subtitle">Web Application Penetration Test Report</div>
+    <div class="meta">
+      <div><strong>Target:</strong> http://localhost:8080 (DVWA)</div>
+      <div><strong>Test Date:</strong> May 21, 2026</div>
+      <div><strong>Tester:</strong> Puneeth Gowda</div>
+      <div><strong>Report Type:</strong> Automated Vulnerability Assessment</div>
+      <div><strong>Total Findings:</strong> 4</div>
+    </div>
+  </div>
+
+  <!-- === EXECUTIVE SUMMARY === -->
+  <h2>Executive Summary</h2>
+  <p>
+    This report presents the findings of an automated security assessment conducted against
+    <strong>http://localhost:8080 (DVWA)</strong> on May 21, 2026. The assessment was performed using a custom-built
+    Python vulnerability scanner that systematically identifies common web application security weaknesses.
+  </p>
+  <p>
+    A total of <strong>4 vulnerabilities</strong> were identified across
+    3 distinct vulnerability classes. All findings are categorized as
+    <strong>High severity</strong> and represent significant risks that should be remediated promptly.
+  </p>
+  <p>
+    The identified vulnerabilities could allow an attacker to compromise user data, hijack user sessions,
+    or gain unauthorized access to sensitive information. Detailed technical findings, proof-of-concept
+    payloads, and remediation guidance are provided in subsequent sections.
+  </p>
+
+  <!-- === FINDINGS SUMMARY GRID === -->
+  <h2>Findings Summary</h2>
+  <div class="summary-grid">
+    <div class="summary-card critical">
+      <div class="count">0</div>
+      <div class="label">Critical</div>
+    </div>
+    <div class="summary-card high">
+      <div class="count">4</div>
+      <div class="label">High</div>
+    </div>
+    <div class="summary-card medium">
+      <div class="count">0</div>
+      <div class="label">Medium</div>
+    </div>
+    <div class="summary-card low">
+      <div class="count">0</div>
+      <div class="label">Low</div>
+    </div>
+  </div>
+
+  <!-- === METHODOLOGY === -->
+  <h2>Methodology</h2>
+  <p>The assessment followed a structured 3-phase methodology:</p>
+  <ol>
+    <li><strong>Reconnaissance &amp; Mapping:</strong> An authenticated crawler enumerated all forms, input fields, and links across protected pages, producing a structured map of the application's attack surface.</li>
+    <li><strong>Vulnerability Detection:</strong> Three independent detection modules tested each input for distinct vulnerability classes:
+      <ul>
+        <li><em>SQL Injection</em> — error-based payload injection across 8 payloads, response pattern matching against 15+ database error signatures</li>
+        <li><em>Cross-Site Scripting</em> — reflective payload injection across 8 XSS variants, detection via unencoded payload reflection in responses</li>
+        <li><em>Insecure Direct Object Reference</em> — sequential ID enumeration with MD5 content-hash comparison to detect unauthorized data access</li>
+      </ul>
+    </li>
+    <li><strong>Reporting:</strong> Findings are aggregated and presented with proof-of-concept payloads, evidence, CVSS 3.1 base scores, and remediation guidance.</li>
+  </ol>
+
+  <!-- === TECHNICAL FINDINGS === -->
+  <h2>Technical Findings</h2>
+
+  
+  <div class="finding high-finding">
+    <div class="finding-header">
+      <h3 class="finding-title">1. SQL Injection (Error-based)</h3>
+      <div>
+        <span class="badge badge-high">High</span>
+        <span class="cvss">CVSS 8.6</span>
+      </div>
+    </div>
+
+    <div class="finding-meta">
+      <div><strong>URL:</strong> http://localhost:8080/vulnerabilities/sqli/</div>
+      <div><strong>Parameter:</strong> id</div>
+      <div><strong>Method:</strong> GET</div>
+    </div>
+
+    <div class="section-label">Proof of Concept</div>
+    <pre>'</pre>
+
+    <div class="section-label">Evidence</div>
+    <p>you have an error in your sql syntax</p>
+
+    <div class="section-label">Impact</div>
+    <p>An attacker can extract arbitrary data from the backend database including user credentials, personal information, and business data. In some cases, attackers can modify or delete data, or execute OS commands via database functionality. SQL Injection is consistently ranked in the OWASP Top 10 as one of the most critical web application vulnerabilities.</p>
+
+    <div class="section-label">Remediation</div>
+    <p>Use parameterized queries (prepared statements) instead of string concatenation when building SQL queries. Implement input validation with strict allow-lists where applicable. Apply the principle of least privilege to the database user account used by the application. Consider using an ORM that handles parameterization automatically.</p>
+
+    <div class="section-label">References</div>
+    <ul>
+      
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" target="_blank">OWASP - SQL Injection Prevention Cheat Sheet</a></li>
+      
+      <li><a href="https://cwe.mitre.org/data/definitions/89.html" target="_blank">CWE-89: Improper Neutralization of Special Elements used in an SQL Command</a></li>
+      
+      <li><a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank">OWASP Top 10 2021 - A03 Injection</a></li>
+      
+    </ul>
+  </div>
+  
+  <div class="finding high-finding">
+    <div class="finding-header">
+      <h3 class="finding-title">2. Reflected Cross-Site Scripting (XSS)</h3>
+      <div>
+        <span class="badge badge-high">High</span>
+        <span class="cvss">CVSS 7.4</span>
+      </div>
+    </div>
+
+    <div class="finding-meta">
+      <div><strong>URL:</strong> http://localhost:8080/vulnerabilities/xss_r/</div>
+      <div><strong>Parameter:</strong> name</div>
+      <div><strong>Method:</strong> GET</div>
+    </div>
+
+    <div class="section-label">Proof of Concept</div>
+    <pre><script>alert(1)</script></pre>
+
+    <div class="section-label">Evidence</div>
+    <p>Payload reflected unencoded in response body</p>
+
+    <div class="section-label">Impact</div>
+    <p>An attacker can craft malicious URLs that, when clicked by a victim, execute JavaScript in the victim's browser within the trusted context of the vulnerable site. This enables session hijacking via cookie theft, credential phishing via fake login overlays, keylogging, defacement, and forced actions on behalf of the victim.</p>
+
+    <div class="section-label">Remediation</div>
+    <p>Apply context-aware output encoding when reflecting user input into responses (HTML encoding for body content, JavaScript encoding for script contexts, URL encoding for URL parameters). Implement a strict Content Security Policy (CSP) to prevent inline script execution. Use security headers like X-XSS-Protection and X-Content-Type-Options. Use frameworks that auto-escape output (e.g., React, Vue, Django templates).</p>
+
+    <div class="section-label">References</div>
+    <ul>
+      
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html" target="_blank">OWASP - Cross Site Scripting Prevention Cheat Sheet</a></li>
+      
+      <li><a href="https://cwe.mitre.org/data/definitions/79.html" target="_blank">CWE-79: Improper Neutralization of Input During Web Page Generation</a></li>
+      
+      <li><a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank">OWASP Top 10 2021 - A03 Injection</a></li>
+      
+    </ul>
+  </div>
+  
+  <div class="finding high-finding">
+    <div class="finding-header">
+      <h3 class="finding-title">3. Insecure Direct Object Reference (IDOR)</h3>
+      <div>
+        <span class="badge badge-high">High</span>
+        <span class="cvss">CVSS 7.7</span>
+      </div>
+    </div>
+
+    <div class="finding-meta">
+      <div><strong>URL:</strong> http://localhost:8080/vulnerabilities/sqli/</div>
+      <div><strong>Parameter:</strong> id</div>
+      <div><strong>Method:</strong> GET</div>
+    </div>
+
+    <div class="section-label">Proof of Concept</div>
+    <pre>Enumerated id=1..6</pre>
+
+    <div class="section-label">Evidence</div>
+    <p>6 unique response contents returned for sequential IDs - possible unauthorized data access across different objects</p>
+
+    <div class="section-label">Impact</div>
+    <p>An attacker with a valid user account can access, modify, or delete data belonging to other users by manipulating object identifiers in requests. The impact scales with the data accessible — from minor information disclosure to full unauthorized access to all user accounts in the system. IDOR is the #1 most-reported bug class on bug bounty platforms.</p>
+
+    <div class="section-label">Remediation</div>
+    <p>Implement consistent authorization checks on every endpoint that accesses an object — never rely on the secrecy of identifiers. Use indirect object references (e.g., random UUIDs scoped per-session) where possible. Apply the principle of least privilege at the data access layer. Log and alert on access pattern anomalies (e.g., enumeration attempts).</p>
+
+    <div class="section-label">References</div>
+    <ul>
+      
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html" target="_blank">OWASP - Insecure Direct Object Reference Prevention</a></li>
+      
+      <li><a href="https://cwe.mitre.org/data/definitions/639.html" target="_blank">CWE-639: Authorization Bypass Through User-Controlled Key</a></li>
+      
+      <li><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank">OWASP Top 10 2021 - A01 Broken Access Control</a></li>
+      
+    </ul>
+  </div>
+  
+  <div class="finding high-finding">
+    <div class="finding-header">
+      <h3 class="finding-title">4. Insecure Direct Object Reference (IDOR)</h3>
+      <div>
+        <span class="badge badge-high">High</span>
+        <span class="cvss">CVSS 7.7</span>
+      </div>
+    </div>
+
+    <div class="finding-meta">
+      <div><strong>URL:</strong> http://localhost:8080/vulnerabilities/sqli/</div>
+      <div><strong>Parameter:</strong> id</div>
+      <div><strong>Method:</strong> GET</div>
+    </div>
+
+    <div class="section-label">Proof of Concept</div>
+    <pre>Enumerated id=1..6</pre>
+
+    <div class="section-label">Evidence</div>
+    <p>6 unique response contents returned for sequential IDs - possible unauthorized data access across different objects</p>
+
+    <div class="section-label">Impact</div>
+    <p>An attacker with a valid user account can access, modify, or delete data belonging to other users by manipulating object identifiers in requests. The impact scales with the data accessible — from minor information disclosure to full unauthorized access to all user accounts in the system. IDOR is the #1 most-reported bug class on bug bounty platforms.</p>
+
+    <div class="section-label">Remediation</div>
+    <p>Implement consistent authorization checks on every endpoint that accesses an object — never rely on the secrecy of identifiers. Use indirect object references (e.g., random UUIDs scoped per-session) where possible. Apply the principle of least privilege at the data access layer. Log and alert on access pattern anomalies (e.g., enumeration attempts).</p>
+
+    <div class="section-label">References</div>
+    <ul>
+      
+      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html" target="_blank">OWASP - Insecure Direct Object Reference Prevention</a></li>
+      
+      <li><a href="https://cwe.mitre.org/data/definitions/639.html" target="_blank">CWE-639: Authorization Bypass Through User-Controlled Key</a></li>
+      
+      <li><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank">OWASP Top 10 2021 - A01 Broken Access Control</a></li>
+      
+    </ul>
+  </div>
+  
+
+  <!-- === CONCLUSION === -->
+  <h2>Conclusion</h2>
+  <p>
+    The application contains 4 high-severity vulnerabilities that present significant
+    security risk. Remediation should be prioritized based on the CVSS scoring and exploitability of each
+    finding. All identified issues map to entries in the OWASP Top 10 (2021), which represents the most
+    critical security risks to modern web applications.
+  </p>
+  <p>
+    Following remediation, a retest is recommended to verify all vulnerabilities have been successfully
+    addressed. Additionally, the development team should consider implementing the secure coding practices
+    outlined in the OWASP Application Security Verification Standard (ASVS).
+  </p>
+
+  <!-- === FOOTER === -->
+  <div class="footer">
+    <p>Generated by Web Vulnerability Scanner v1.0 &mdash; May 21, 2026</p>
+    <p>Report prepared by Puneeth Gowda &middot; <a href="https://github.com/puni8/web-vuln-scanner">github.com/puni8/web-vuln-scanner</a></p>
+  </div>
+
+</div>
+</body>
+</html>

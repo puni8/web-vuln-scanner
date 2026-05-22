@@ -185,7 +185,7 @@
       <div><strong>Test Date:</strong> May 21, 2026</div>
       <div><strong>Tester:</strong> Puneeth Gowda</div>
       <div><strong>Report Type:</strong> Automated Vulnerability Assessment</div>
-      <div><strong>Total Findings:</strong> 4</div>
+      <div><strong>Total Findings:</strong> 3</div>
     </div>
   </div>
 
@@ -197,7 +197,7 @@
     Python vulnerability scanner that systematically identifies common web application security weaknesses.
   </p>
   <p>
-    A total of <strong>4 vulnerabilities</strong> were identified across
+    A total of <strong>3 vulnerabilities</strong> were identified across
     3 distinct vulnerability classes. All findings are categorized as
     <strong>High severity</strong> and represent significant risks that should be remediated promptly.
   </p>
@@ -215,7 +215,7 @@
       <div class="label">Critical</div>
     </div>
     <div class="summary-card high">
-      <div class="count">4</div>
+      <div class="count">3</div>
       <div class="label">High</div>
     </div>
     <div class="summary-card medium">
@@ -364,50 +364,11 @@
     </ul>
   </div>
   
-  <div class="finding high-finding">
-    <div class="finding-header">
-      <h3 class="finding-title">4. Insecure Direct Object Reference (IDOR)</h3>
-      <div>
-        <span class="badge badge-high">High</span>
-        <span class="cvss">CVSS 7.7</span>
-      </div>
-    </div>
-
-    <div class="finding-meta">
-      <div><strong>URL:</strong> http://localhost:8080/vulnerabilities/sqli/</div>
-      <div><strong>Parameter:</strong> id</div>
-      <div><strong>Method:</strong> GET</div>
-    </div>
-
-    <div class="section-label">Proof of Concept</div>
-    <pre>Enumerated id=1..6</pre>
-
-    <div class="section-label">Evidence</div>
-    <p>6 unique response contents returned for sequential IDs - possible unauthorized data access across different objects</p>
-
-    <div class="section-label">Impact</div>
-    <p>An attacker with a valid user account can access, modify, or delete data belonging to other users by manipulating object identifiers in requests. The impact scales with the data accessible — from minor information disclosure to full unauthorized access to all user accounts in the system. IDOR is the #1 most-reported bug class on bug bounty platforms.</p>
-
-    <div class="section-label">Remediation</div>
-    <p>Implement consistent authorization checks on every endpoint that accesses an object — never rely on the secrecy of identifiers. Use indirect object references (e.g., random UUIDs scoped per-session) where possible. Apply the principle of least privilege at the data access layer. Log and alert on access pattern anomalies (e.g., enumeration attempts).</p>
-
-    <div class="section-label">References</div>
-    <ul>
-      
-      <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html" target="_blank">OWASP - Insecure Direct Object Reference Prevention</a></li>
-      
-      <li><a href="https://cwe.mitre.org/data/definitions/639.html" target="_blank">CWE-639: Authorization Bypass Through User-Controlled Key</a></li>
-      
-      <li><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank">OWASP Top 10 2021 - A01 Broken Access Control</a></li>
-      
-    </ul>
-  </div>
-  
 
   <!-- === CONCLUSION === -->
   <h2>Conclusion</h2>
   <p>
-    The application contains 4 high-severity vulnerabilities that present significant
+    The application contains 3 high-severity vulnerabilities that present significant
     security risk. Remediation should be prioritized based on the CVSS scoring and exploitability of each
     finding. All identified issues map to entries in the OWASP Top 10 (2021), which represents the most
     critical security risks to modern web applications.
